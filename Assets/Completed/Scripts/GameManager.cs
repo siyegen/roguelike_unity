@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
+    [HideInInspector]
+    public static Camera mainCamera = null;
+    [HideInInspector]
+    public static Player mainPlayer = null;
+
     public float turnDelay = .1f;
     public static GameManager instance = null;
     public BoardManager boardScript;
@@ -34,6 +39,7 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         enemies = new List<Enemy>();
         boardScript = GetComponent<BoardManager>();
+        Debug.Log("columns " + boardScript.columns);
         InitGame();
 	}
 
@@ -45,6 +51,18 @@ public class GameManager : MonoBehaviour {
             InitGame();
         } else {
             firstInit = false;
+        }
+    }
+
+    // XXX: WTF
+    void SetupCameraPlayer() {
+        mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        if (mainCamera == null) {
+            Debug.Log("no camera");
+        }
+        mainPlayer = GameObject.FindWithTag("Player").GetComponent<Player>();
+        if (mainPlayer == null) {
+            Debug.Log("no player");
         }
     }
 
@@ -60,6 +78,7 @@ public class GameManager : MonoBehaviour {
 
     void InitGame() {
         doingSetup = true;
+        SetupCameraPlayer();
         levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
         levelText.text = "Day " + level;
@@ -83,6 +102,7 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        mainCamera.transform.position = new Vector3(mainPlayer.transform.position.x, mainPlayer.transform.position.y, mainCamera.transform.position.z);
         if (playersTurn || enemiesMoving || doingSetup) {
             return;
         }

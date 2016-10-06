@@ -8,6 +8,9 @@ public class Loader : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 	    if (GameManager.instance == null) {
+            if (this.GetComponent<Camera>() == null) {
+                Debug.Log("no camera in loader");
+            }
             Instantiate(gameManager);
         }
 	}
