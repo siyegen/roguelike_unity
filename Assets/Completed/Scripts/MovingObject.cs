@@ -44,18 +44,30 @@ public abstract class MovingObject : MonoBehaviour {
         }
     }
 
-    protected virtual void AttemptMove<T>(int xDir, int yDir) where T : Component {
+    protected virtual void AttemptMove<T>(int xDir, int yDir) where T : IHittable {
         RaycastHit2D hit;
         bool canMove = Move(xDir, yDir, out hit);
         if (hit.transform == null) {
             return;
         }
 
-        T hitComponent = hit.transform.GetComponent<T>();
+        Debug.Log("tt" + hit.transform.GetType());
+        IHittable hitComponent = (IHittable)hit.transform.GetComponent(typeof(IHittable));
         if (!canMove && hitComponent != null) {
-            OnCantMove(hitComponent);
+            if (hitComponent is Wall) {
+                OnCantMove((Wall)hitComponent);
+            } else if (hitComponent is Player) {
+                OnCantMove((Player)hitComponent);
+            } else if (hitComponent is Enemy) {
+                OnCantMove((Enemy)hitComponent);
+            }
         }
+
+        //T hitComponent = hit.transform.GetComponent<T>();
+        //if (!canMove && hitComponent != null) {
+        //    OnCantMove(hitComponent);
+        //}
     }
 
-    protected abstract void OnCantMove<T>(T component) where T : Component;
+    protected abstract void OnCantMove<T>(T component) where T : IHittable;
 }

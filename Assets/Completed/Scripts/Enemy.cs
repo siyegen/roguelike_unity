@@ -2,18 +2,20 @@
 using System.Collections;
 using System;
 
-public class Enemy : MovingObject {
+public class Enemy : MovingObject, IHittable {
 
     public int playerDamage;
 
     private Animator animator;
     private Transform target;
     private bool skipMove;
+    public int hp = 6;
     
     protected override void Start () {
         GameManager.instance.AddEnemyToList(this);
         animator = GetComponent<Animator>();
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        SetHp(6);
         base.Start();
 	}
 
@@ -42,8 +44,21 @@ public class Enemy : MovingObject {
     }
 
     protected override void OnCantMove<T>(T component) {
-        Player hitPlayer = component as Player;
         animator.SetTrigger("enemyAttack");
-        hitPlayer.LoseFood(playerDamage);
+        component.TakeDamage(playerDamage);
+    }
+
+    public void SetHp(int HP) {
+        hp = HP;
+    }
+
+    public bool TakeDamage(int loss) {
+        Debug.Log("bam");
+        hp -= loss;
+        if (hp <= 0) {
+            gameObject.SetActive(false);
+            return true;
+        }
+        return false;
     }
 }

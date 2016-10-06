@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class Wall : MonoBehaviour {
+public class Wall : MonoBehaviour, IHittable {
 
     public Sprite dmgSprite;
     public int hp = 4;
@@ -13,11 +14,21 @@ public class Wall : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void DamageWall (int loss) {
+    void Start() {
+        SetHp(3);
+    }
+
+    public void SetHp(int HP) {
+        hp = HP;
+    }
+
+    public bool TakeDamage(int loss) {
         spriteRenderer.sprite = dmgSprite;
         hp -= loss;
-        if (hp <=0) {
+        if (hp <= 0) {
             gameObject.SetActive(false);
+            return true;
         }
+        return false;
     }
 }

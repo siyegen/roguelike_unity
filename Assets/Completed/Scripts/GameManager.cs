@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour {
 
     private Text levelText;
     private GameObject levelImage;
-    private int level = 1;
+    private int level = 4;
     private List<Enemy> enemies;
     private bool enemiesMoving;
     private bool doingSetup;
@@ -123,8 +123,11 @@ public class GameManager : MonoBehaviour {
         }
 
         for (int i=0; i < enemies.Count; i++) {
-            enemies[i].MoveEnemy();
-            yield return new WaitForSeconds(enemies[i].moveTime);
+            if( enemies[i].isActiveAndEnabled) {
+                enemies[i].MoveEnemy();
+                yield return new WaitForSeconds(enemies[i].moveTime);
+            }
+            
         }
 
         playersTurn = true;

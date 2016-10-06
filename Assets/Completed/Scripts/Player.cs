@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
-public class Player : MovingObject {
+public class Player : MovingObject, IHittable {
 
     public int wallDamage = 1;
     public int pointsPerFood = 10;
@@ -20,6 +20,7 @@ public class Player : MovingObject {
         animator = GetComponent<Animator>();
         food = GameManager.instance.playerFoodPoints;
         foodScore.text = "Food: " + food;
+        SetHp(food);
         base.Start();
 	}
 
@@ -38,7 +39,7 @@ public class Player : MovingObject {
         if (hor != 0) vert = 0;
 
         if (hor != 0 || vert != 0) {
-            AttemptMove<Wall>(hor, vert);
+            AttemptMove<IHittable>(hor, vert);
         }
 	}
 
@@ -75,8 +76,7 @@ public class Player : MovingObject {
     }
 
     protected override void OnCantMove<T>(T component) {
-        Wall hitWall = component as Wall;
-        hitWall.DamageWall(wallDamage);
+        component.TakeDamage(wallDamage);
         animator.SetTrigger("playerChop");
     }
 
@@ -95,5 +95,14 @@ public class Player : MovingObject {
         if (food <=0) {
             GameManager.instance.GameOver();
         }
+    }
+
+    public void SetHp(int HP) {
+        food = HP;
+    }
+
+    public bool TakeDamage(int loss) {
+        LoseFood(loss);
+        return false;
     }
 }
