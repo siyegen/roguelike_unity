@@ -112,12 +112,13 @@ public class GameManager : MonoBehaviour {
 	}
 
     public void AddEnemyToList(Enemy script) {
+        Debug.Log("adding enemy");
         enemies.Add(script);
     }
 
     IEnumerator MoveEnemies() {
         enemiesMoving = true;
-        yield return new WaitForSeconds(turnDelay);
+        // yield return new WaitForSeconds(turnDelay);
         if (enemies.Count == 0) {
             yield return new WaitForSeconds(turnDelay);
         }

@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 
 public class Enemy : MovingObject, IHittable {
 
@@ -19,16 +17,16 @@ public class Enemy : MovingObject, IHittable {
         base.Start();
 	}
 
-    protected override void AttemptMove<T>(int xDir, int yDir) {
-        if (skipMove) {
-            skipMove = false;
-            return;
-        } 
+    // protected override void AttemptMove<T>(int xDir, int yDir) {
+    //     if (skipMove) {
+    //         skipMove = false;
+    //         return;
+    //     } 
 
-        base.AttemptMove<T>(xDir, yDir);
+    //     base.AttemptMove<T>(xDir, yDir);
 
-        skipMove = true;
-    }
+    //     skipMove = true;
+    // }
 
     public void MoveEnemy() {
         int xDir = 0;
@@ -40,7 +38,7 @@ public class Enemy : MovingObject, IHittable {
             xDir = target.position.x > transform.position.x ? 1 : -1;
         }
 
-        AttemptMove<Player>(xDir, yDir);
+        AttemptMove<IHittable>(xDir, yDir);
     }
 
     protected override void OnCantMove<T>(T component) {
